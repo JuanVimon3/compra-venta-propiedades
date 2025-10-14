@@ -1,7 +1,16 @@
 'use client';
 
+import { properties } from "@/data/properties";
+import PropertyCard from "@/components/PropertyCard";
+
 export default function Home() {
   return (
-    <h1 className="text-red-500">Hello world</h1>
+    <main className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+      {properties.map((property) =>(
+        <PropertyCard key={property.id} property={property}/>
+      ))
+
+      }
+    </main>
   );
 }
