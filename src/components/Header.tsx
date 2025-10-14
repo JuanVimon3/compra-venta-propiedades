@@ -12,10 +12,9 @@ export default function Header() {
   ]
 
   return (
-    <header className="flex items-center justify-between bg-[#840705] text-[#F7F6F6]">
-      <nav>
+    <header className="flex items-center justify-between bg-[#840705] text-[#F7F6F6] py-4 px-6">
+      <nav className=" lg:flex ml-0 mr-0 space-x-16 mx-auto font-source-sans">
         {links.map((link) => (
-        <>
           <Link
             key={link.href}
             href={link.href}
@@ -24,12 +23,10 @@ export default function Header() {
           >
             {link.label}
           </Link>
-          
-          
-        </>
+
         ))}
-        <div className="text-x font-bold text-[#F7F6F6]"> Compra y venta de propiedades</div>
       </nav>
+      <div className="absolute left-1/2 transform -translate-x-1/2 font-bold text-lg text-[#F7F6F6] "> Compra y venta de propiedades</div>
     </header>
   )
 }
