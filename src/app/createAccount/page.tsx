@@ -17,7 +17,7 @@ export default function createAccount(){
       </button>
 
       <div className="relative w-80 mt-2">
-        <input type="email" id="email" className="peer border border-gray-300 rounded-md px-3 pt-4 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
+        <input type="email" id="email" className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
         <label htmlFor="email" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
         Dirección de correo
       </label>
@@ -25,7 +25,7 @@ export default function createAccount(){
 
 
       <div className="relative w-80 mt-2">
-        <input type="password" id="password" className="peer border border-gray-300 rounded-md px-3 pt-4 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
+        <input type="password" id="password" className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
         <label htmlFor="password" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
         Contraseña
       </label>
