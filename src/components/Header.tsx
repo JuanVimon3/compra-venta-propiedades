@@ -10,9 +10,10 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const links = [
-    { href: "/", label: "home" },
+    { href: "/", label: "Home" },
     { href: "/createAccount", label: "Crear cuenta" },
-    { href: "/login", label: "Ingresar" }
+    { href: "/login", label: "Ingresar" },
+    {href: "userDashboard", label: "Panel de usuario"}
   ]
 
   return (
@@ -31,7 +32,7 @@ export default function Header() {
 
         <nav className={`
         ${menuOpen ? "flex" : "hidden"}
-        flex-col md:flex md:flex-row md:space-x-16 absolute md:static top-16 letf-0 w-full md:w-auto bg-[#840705] md:bg-transparent text-center md:text-left transition-all duration-300 z-20
+        flex-col md:flex md:flex-row md:space-x-9 absolute md:static top-16 letf-0 w-full md:w-auto bg-[#840705] md:bg-transparent text-center md:text-left transition-all duration-300 z-20
         `}>
 
           {links.map((link) =>
