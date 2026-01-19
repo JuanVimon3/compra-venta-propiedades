@@ -1,0 +1,26 @@
+import { Property } from "./Property"
+
+export class Cabin extends Property{
+  constructor(
+    id: number,
+    price: number,
+    address: string,
+    private rooms: number,
+    private isTouristic: boolean
+  ){
+    super(id, price, address)
+  }
+
+  getType(): string {
+    return "Cabin"
+  };
+
+  getRooms(): number {
+    return this.rooms
+  };
+
+
+  getIsTouristic(): boolean{
+    return this.isTouristic
+  }
+}
