@@ -1,3 +1,5 @@
+//Este componente es la página de creación de cuenta de la aplicación. Incluye un formulario que permite a los usuarios registrarse utilizando su correo electrónico y contraseña, o continuar con su cuenta de Google. El diseño es limpio y centrado, con un enfoque en la facilidad de uso. El formulario incluye campos para el correo electrónico y la contraseña, así como una casilla de verificación para recibir noticias y actualizaciones. Al hacer clic en el botón "Crear cuenta", se espera que se maneje la lógica de registro (que aún no está implementada en este código). El diseño es responsive, adaptándose a diferentes tamaños de pantalla.
+
 export default function createAccount(){
   return (
     <form action="" className="flex flex-col items-center">

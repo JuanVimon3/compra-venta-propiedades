@@ -1,6 +1,8 @@
 import { Property } from "@/types/property";
 import Image from "next/image";
 
+//Este componente muestra los detalles completos de una propiedad, incluyendo su imagen, título, descripción, ubicación, tipo y precio. Está diseñado para ser utilizado en la página de detalles de una propiedad, proporcionando a los usuarios toda la información relevante sobre la propiedad que han seleccionado. El diseño es limpio y enfocado en la presentación visual de la propiedad, con un layout que se adapta a diferentes tamaños de pantalla.
+
 interface PropertyDetailProps {
   property: Property
 }

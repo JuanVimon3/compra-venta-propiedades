@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Property } from "@/types/property";
 import Image from "next/image";
 
+//Este componente es una tarjeta que muestra información básica de una propiedad, como su imagen, título, ubicación, descripción breve, tipo, área, número de habitaciones y baños, y precio. Al hacer clic en la tarjeta, el usuario es redirigido a la página de detalles de la propiedad. El diseño tiene un enfoque en la presentación visual de la propiedad.
+
 interface PropertyCardProps {
   property: Property;
 };

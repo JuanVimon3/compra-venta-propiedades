@@ -1,3 +1,5 @@
+//Este componente es la página de inicio de sesión de la aplicación. Incluye un formulario que permite a los usuarios ingresar su correo electrónico y contraseña para acceder a su cuenta, o continuar con su cuenta de Google. El diseño es limpio y centrado, con un enfoque en la facilidad de uso. El formulario incluye campos para el correo electrónico y la contraseña, así como un enlace para recuperar la contraseña en caso de olvido. Al hacer clic en el botón "Ingresar", se espera que se maneje la lógica de autenticación (que aún no está implementada en este código). El diseño es responsive, adaptándose a diferentes tamaños de pantalla.
+
 export default function login() {
   return (
     <form action="" className="flex flex-col items-center">

@@ -1,5 +1,7 @@
 "use client";
 
+//Este componente es el header de la aplicación, que incluye un menú de navegación con enlaces a diferentes páginas. El menú es responsive (usePathname es el hook que gestiona las URL's), mostrando un botón de menú en dispositivos móviles y una barra de navegación horizontal en pantallas más grandes. El enlace activo se resalta con un estilo diferente.
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";

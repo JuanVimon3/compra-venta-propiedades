@@ -4,6 +4,8 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
+//Este archivo es el layout principal de la aplicación, que envuelve todas las páginas y componentes. Aquí se importan las fuentes de Google Fonts (Geist Sans y Geist Mono) y se aplican a toda la aplicación. También se incluyen los componentes de Header y Footer, que se muestran en todas las páginas. El layout asegura que el diseño sea consistente en toda la aplicación, proporcionando una estructura común para todas las páginas y facilitando la navegación para los usuarios.
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
