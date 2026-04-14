@@ -2,32 +2,41 @@ import Link from "next/link";
 import { Property } from "@/types/property";
 import Image from "next/image";
 
-//Este componente es una tarjeta que muestra información básica de una propiedad, como su imagen, título, ubicación, descripción breve, tipo, área, número de habitaciones y baños, y precio. Al hacer clic en la tarjeta, el usuario es redirigido a la página de detalles de la propiedad. El diseño tiene un enfoque en la presentación visual de la propiedad.
-
 interface PropertyCardProps {
   property: Property;
-};
+}
 
 
 export default function PropertyCard({ property }: PropertyCardProps) {
+
+  
+  if (!property) return null;
+
+  console.log(`Propiedad ${property.idPropiedad}: URL de imagen ->`, property.image);
+
+  const imageSrc = (property.image && property.image.trim() !== "") 
+    ? property.image 
+    : "/images/default.jpg";
+  
   return (
-    <div key={property.id} className="max-w-sm rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl trasition-all duration-300 bg-white">
-      <Link href={`/properties/${property.id}`}>
-      <div className="relative w-full h-48">
-        <Image 
-          className="object-cover"
-          src={property.image}
-          alt={property.title} 
-          fill
-        />
-      </div>      
+    <div className="max-w-sm rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white">
+      <Link href={`/properties/${property.idPropiedad}`}>
+        <div className="relative w-full h-48">
+          <Image 
+            className="object-cover"
+            src={imageSrc}
+            alt={property.titulo} 
+            fill
+            sizes="(max-w-768px) 100vw, 33vw"
+          />
+        </div>      
         <div className="px-6 py-4">
           <div className="font-bold text-xl mb-2 text-gray-800">
-            {property.title}
+            {property.titulo}
           </div>
-          <p className="text-gray-600 text-sm mb-2">{property.location}</p>
+          <p className="text-gray-600 text-sm mb-2">{property.ubicacion}</p>
           <p className="text-gray-700 text-base line-clamp-3">
-            {property.description}
+            {property.descripcion}
           </p>
         </div>
         <div className="px-6 pt-4 pb-4 flex flex-wrap gap-2">
@@ -48,12 +57,12 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         <div className="px-6 pb-4">
           <p className="text-blue-600 font-bold text-lg">
             {property.type === "Venta"
-              ? `Desde $${property.price.toLocaleString("es-CO")}`
-              : `Arriendo: $${property.price.toLocaleString("es-CO")} /mes`
+              ? `Desde $${(property.precio || 0).toLocaleString("es-CO")}`
+              : `Arriendo: $${(property.precio || 0).toLocaleString("es-CO")} /mes`
             }
           </p>
         </div>
       </Link>
     </div>
-  )
+  );
 }

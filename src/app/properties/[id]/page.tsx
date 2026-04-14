@@ -1,19 +1,24 @@
-import { properties } from "@/data/properties";
 import PropertyDetail from "@/components/PropertyDetail";
+import { Property } from "@/types/property";
 
-//Este componente es la página de detalles de una propiedad específica. Utiliza el parámetro "id" de la URL para encontrar la propiedad correspondiente en el array de propiedades. Si se encuentra la propiedad, se muestra el componente "PropertyDetail" con la información de esa propiedad. Si no se encuentra, se muestra un mensaje indicando que la propiedad no fue encontrada. Este componente es esencial para mostrar información detallada sobre cada propiedad cuando los usuarios hacen clic en una tarjeta de propiedad desde la página principal o cualquier otra lista de propiedades.
-
-interface PropertyPageProps{
-  params: {
+interface PropertyPageProps {
+  params: Promise<{
     id: string;
-  };
-};
+  }>;
+}
 
-export default function PropertyPage({params}: PropertyPageProps){
-  const property = properties.find((p) => p.id === Number(params.id))
-  if(!property){
-    return <div>Propiedad no encontrada</div>
-  };
+export default async function PropertyPage({ params }: PropertyPageProps) {
+  
+  const resolvedParams = await params;
+  const id = resolvedParams.id;
+const response = await fetch(`http://localhost:8080/api/propiedades/${id}`, {
+    cache: 'no-store'
+  });
 
+  if (!response.ok) {
+    return <div className="text-center mt-10">Propiedad no encontrada en la base de datos</div>;
+  }
+
+  const property = await response.json();
   return <PropertyDetail property={property} />
 }
