@@ -14,20 +14,22 @@ export default function PropertyCard({ property }: PropertyCardProps) {
 
   console.log(`Propiedad ${property.idPropiedad}: URL de imagen ->`, property.image);
 
-  const imageSrc = (property.image && property.image.trim() !== "") 
-    ? property.image 
-    : "/images/default.jpg";
-  
+  // const imageSrc = (property.image && property.image.trim() !== "") 
+  //   ? property.image 
+  //   : "https://via.placeholder.com/600x400?text=Sin+Imagen";
+    
   return (
     <div className="max-w-sm rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white">
       <Link href={`/properties/${property.idPropiedad}`}>
         <div className="relative w-full h-48">
           <Image 
             className="object-cover"
-            src={imageSrc}
+            src={property.image}
             alt={property.titulo} 
             fill
             sizes="(max-w-768px) 100vw, 33vw"
+            unoptimized
+            priority={true}
           />
         </div>      
         <div className="px-6 py-4">
