@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Property } from "@/types/property";
+import { Property } from "@/types";
 import Image from "next/image";
 
 interface PropertyCardProps {

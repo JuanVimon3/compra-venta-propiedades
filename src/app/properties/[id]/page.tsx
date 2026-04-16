@@ -1,5 +1,5 @@
 import PropertyDetail from "@/components/PropertyDetail";
-import { Property } from "@/types/property";
+import { Property } from "@/types";
 
 interface PropertyPageProps {
   params: Promise<{

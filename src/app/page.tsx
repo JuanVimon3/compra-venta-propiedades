@@ -1,6 +1,6 @@
 // 1. ELIMINAMOS 'use client' para poder hacer el fetch directamente en el servidor
 import PropertyCard from "@/components/PropertyCard";
-import { Property } from "@/types/property";
+import { Property } from "@/types";
 
 export default async function Home() {
   // 2. Realizamos la petición a tu API de Spring Boot

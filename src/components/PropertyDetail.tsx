@@ -1,4 +1,4 @@
-import { Property } from "@/types/property";
+import { Property } from "@/types";
 import Image from "next/image";
 
 interface PropertyDetailProps {
