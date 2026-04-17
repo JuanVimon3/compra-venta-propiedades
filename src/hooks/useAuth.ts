@@ -1,3 +1,5 @@
+"use client";
+
 import { useAuthStore } from "@/store/store";
 import { LoginCredentials } from "@/types";
 
@@ -6,7 +8,7 @@ export const useAuth = () => {
 
     const login = async (credentials : LoginCredentials) => {
         try {
-            const response = await fetch("", {
+            const response = await fetch("http://localhost:8080/api/usuarios/login", {
                 method: "POST",
                 body: JSON.stringify(credentials),
                 headers: {
@@ -20,9 +22,12 @@ export const useAuth = () => {
 
             const data = await response.json();
 
-            setAuth(data.user, data.token);
+            setAuth(data, ""); // Guarda el token y la información del usuario en el store
+
+            return { success: true };
         } catch (error) {
             console.error("Error en el login:", error);
+            return { success: false, msg: "Error de conexión con el servidor" };
         }
     }
 

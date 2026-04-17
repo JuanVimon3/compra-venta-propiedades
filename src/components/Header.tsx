@@ -4,12 +4,27 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react"
+import { useAuthStore } from "@/store/store";
 
 export default function Header() {
   const pathName = usePathname()
   const [menuOpen, setMenuOpen] = useState(false);
+  const  user  = useAuthStore(state => state.user?.nombre); // Solo obtenemos el nombre del usuario para mostrarlo en el header
+  const  logout = useAuthStore(state => state.clearAuth); // Obtenemos la función de logout para cerrar sesión desde el header
+
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Este efecto asegura que el componente solo se renderice en el cliente, evitando problemas con SSR
+  useEffect(() => {
+    setIsMounted(true);
+  }, []); 
+
+  if (!isMounted) {
+    return null; // Evita renderizar el componente en el servidor
+  }
+
 
   const links = [
     { href: "/", label: "Home" },
@@ -51,12 +66,17 @@ export default function Header() {
             </Link>
           )}
         </nav>
-
+        <nav className="flex items-center gap-4">
+          {user ? (<span>Bienvenido, {user}</span>) : null}
+          <button onClick={logout}>Salir</button>
+        </nav>
       </div>
 
       <h1 className="md:hidden text-center font-bold mt-2 text-base">
         Compra y venta de propiedades
       </h1>
+
+      
 
     </header>
   )
