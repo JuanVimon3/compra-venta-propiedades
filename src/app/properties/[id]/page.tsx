@@ -1,27 +1,31 @@
 export const dynamic = 'force-dynamic';
-export const fetchCache = 'force-no-store';
 
 import PropertyDetail from "@/components/PropertyDetail";
 
-
 interface PropertyPageProps {
-  params: Promise<{
-    id: string;
-  }>;
+  params: Promise<{ id: string; }>;
 }
 
 export default async function PropertyPage({ params }: PropertyPageProps) {
-  
-  const resolvedParams = await params;
-  const id = resolvedParams.id;
-const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/propiedades/${id}`, {
-    cache: 'no-store'
-  });
+  const { id } = await params;
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-  if (!response.ok) {
-    return <div className="text-center mt-10">Propiedad no encontrada en la base de datos</div>;
+  // Si la URL falla durante el build, esto evita que Vercel se bloquee
+  if (!apiUrl) {
+    return <div className="text-center mt-10">Cargando configuración...</div>;
   }
 
-  const property = await response.json();
-  return <PropertyDetail property={property} />
+  try {
+    const response = await fetch(`${apiUrl}/api/propiedades/${id}`, {
+      cache: 'no-store'
+    });
+
+    if (!response.ok) return <div className="text-center mt-10">Propiedad no encontrada</div>;
+
+    const property = await response.json();
+    return <PropertyDetail property={property} />;
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Error desconocido";
+    return <div className="text-center mt-10">Error de conexión con el servidor{errorMessage}</div>;
+  }
 }
