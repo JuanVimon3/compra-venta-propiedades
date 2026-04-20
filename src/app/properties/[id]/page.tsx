@@ -1,4 +1,6 @@
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
 import PropertyDetail from "@/components/PropertyDetail";
 
 
