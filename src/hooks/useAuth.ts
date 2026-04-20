@@ -8,7 +8,7 @@ export const useAuth = () => {
 
     const login = async (credentials : LoginCredentials) => {
         try {
-            const response = await fetch("http://localhost:8080/api/usuarios/login", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/usuarios/login`, {
                 method: "POST",
                 body: JSON.stringify(credentials),
                 headers: {
