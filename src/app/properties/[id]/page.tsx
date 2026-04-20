@@ -11,7 +11,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
   
   const resolvedParams = await params;
   const id = resolvedParams.id;
-const response = await fetch(`http://localhost:8080/api/propiedades/${id}`, {
+const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/propiedades/${id}`, {
     cache: 'no-store'
   });
 
