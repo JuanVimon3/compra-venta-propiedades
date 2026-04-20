@@ -4,7 +4,8 @@ import { Property } from "@/types";
 
 export default async function Home() {
   // 2. Realizamos la petición a tu API de Spring Boot en una versión de pruebas
-  const response = await fetch('http://localhost:8080/api/propiedades', {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const response = await fetch(`${apiUrl}/api/propiedades`, {
     cache: 'no-store' // Para que siempre traiga datos frescos de la DB
   });
   
