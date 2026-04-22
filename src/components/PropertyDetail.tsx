@@ -13,7 +13,7 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
 
 const imageSrc = (imageUrl && imageUrl.startsWith("http")) 
   ? imageUrl 
-  : "https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=1000&q=80";
+  : "https://picsum.photos/seed/picsum/600/400";
 
   return (
     <div className="flex flex-col md:flex-row max-w-5xl mx-auto p-4 md:p-6 bg-white rounded-2xl shadow-md gap-6">

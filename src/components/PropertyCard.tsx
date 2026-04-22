@@ -22,19 +22,22 @@ export default function PropertyCard({ property }: PropertyCardProps) {
 
   const finalSrc = (imageUrl && imageUrl.startsWith("http")) 
    ? imageUrl
-   : "https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=1000&q=80";
+   : "https://picsum.photos/seed/picsum/600/400";
     
   return (
     <div className="max-w-sm rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white">
       <Link href={`/properties/${property.idPropiedad}`}>
         <div className="relative w-full h-48">
-  {/* Cambia <Image /> por esto solo para probar */}
-  <img 
-    src={finalSrc}
-    alt={property.titulo} 
-    className="object-cover w-full h-full"
-  />
-</div>    
+          <Image 
+            className="object-cover"
+            src={finalSrc}
+            alt={property.titulo} 
+            fill
+            sizes="(max-w-768px) 100vw, 33vw"
+            unoptimized
+            priority={true}
+          />
+        </div>      
         <div className="px-6 py-4">
           <div className="font-bold text-xl mb-2 text-gray-800">
             {property.titulo}
