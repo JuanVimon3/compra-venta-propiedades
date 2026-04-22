@@ -28,16 +28,13 @@ export default function PropertyCard({ property }: PropertyCardProps) {
     <div className="max-w-sm rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white">
       <Link href={`/properties/${property.idPropiedad}`}>
         <div className="relative w-full h-48">
-          <Image 
-            className="object-cover"
-            src={finalSrc}
-            alt={property.titulo} 
-            fill
-            sizes="(max-w-768px) 100vw, 33vw"
-            unoptimized
-            priority={true}
-          />
-        </div>      
+  {/* Cambia <Image /> por esto solo para probar */}
+  <img 
+    src={finalSrc}
+    alt={property.titulo} 
+    className="object-cover w-full h-full"
+  />
+</div>    
         <div className="px-6 py-4">
           <div className="font-bold text-xl mb-2 text-gray-800">
             {property.titulo}
