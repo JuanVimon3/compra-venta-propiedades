@@ -20,7 +20,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
 
   const imageUrl = property.image || property.imagen || property.imageUrl;
 
-  const finalSrc = (imageUrl && imageUrl.startsWith("http")) 
+  const finalSrc = (imageUrl && imageUrl.startsWith("http") && !imageUrl.includes("unsplash"))
    ? imageUrl
    : "/images/default.jpg"; // Ruta a una imagen local por defecto
     

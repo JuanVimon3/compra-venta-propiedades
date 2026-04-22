@@ -11,7 +11,7 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
 
   const imageUrl = property.image || property.imagen || property.imageUrl;
 
-const imageSrc = (imageUrl && imageUrl.startsWith("http")) 
+const imageSrc = (imageUrl && imageUrl.startsWith("http") && !imageUrl.includes("unsplash"))
   ? imageUrl 
   : "/images/default.jpg"; // Ruta a una imagen local por defecto
 
