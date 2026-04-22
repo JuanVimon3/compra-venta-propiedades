@@ -22,7 +22,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
 
   const finalSrc = (imageUrl && imageUrl.startsWith("http")) 
    ? imageUrl
-   : "https://picsum.photos/200/300";
+   : "/images/default.jpg"; // Ruta a una imagen local por defecto
     
   return (
     <div className="max-w-sm rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white">

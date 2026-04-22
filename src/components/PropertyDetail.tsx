@@ -13,7 +13,7 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
 
 const imageSrc = (imageUrl && imageUrl.startsWith("http")) 
   ? imageUrl 
-  : "https://picsum.photos/200/300";
+  : "/images/default.jpg"; // Ruta a una imagen local por defecto
 
   return (
     <div className="flex flex-col md:flex-row max-w-5xl mx-auto p-4 md:p-6 bg-white rounded-2xl shadow-md gap-6">
