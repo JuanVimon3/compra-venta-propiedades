@@ -9,9 +9,11 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
   
   if (!property) return <div className="p-10 text-center">Cargando...</div>;
 
-  const imageSrc = (property.image && property.image.trim() !== "") 
-    ? property.image 
-    : "/images/default.jpg";
+  const imageUrl = property.image || property.imagen || property.imageUrl;
+
+const imageSrc = (imageUrl && imageUrl.startsWith("http")) 
+  ? imageUrl 
+  : "https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=1000&q=80";
 
   return (
     <div className="flex flex-col md:flex-row max-w-5xl mx-auto p-4 md:p-6 bg-white rounded-2xl shadow-md gap-6">
