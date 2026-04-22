@@ -8,7 +8,9 @@ export interface Property {
   area: string;
   bedrooms: number;
   bathrooms: number;
-  image: string;
+  image?: string;
+  imagen?: string;
+  imageUrl?: string;
   descripcion: string;
   type: "Venta" | "Arriendo";
 }

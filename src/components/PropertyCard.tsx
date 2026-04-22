@@ -17,6 +17,12 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   // const imageSrc = (property.image && property.image.trim() !== "") 
   //   ? property.image 
   //   : "https://via.placeholder.com/600x400?text=Sin+Imagen";
+
+  const imageUrl = property.image || property.imagen || property.imageUrl;
+
+  const finalSrc = (imageUrl && imageUrl.startsWith("http")) 
+   ? imageUrl
+   : "https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=1000&q=80";
     
   return (
     <div className="max-w-sm rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white">
@@ -24,7 +30,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         <div className="relative w-full h-48">
           <Image 
             className="object-cover"
-            src={property.image}
+            src={finalSrc}
             alt={property.titulo} 
             fill
             sizes="(max-w-768px) 100vw, 33vw"
