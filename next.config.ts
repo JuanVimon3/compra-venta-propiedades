@@ -14,6 +14,11 @@ const nextConfig: NextConfig = {
         hostname: '**.onrender.com',
         pathname: '**',
       },
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+        pathname: '/**',
+      },
     ],
   },
 };
