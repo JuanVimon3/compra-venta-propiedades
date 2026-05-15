@@ -7,6 +7,7 @@ export const useAuth = () => {
     const { user, token, setAuth, clearAuth, isLoggedIn } = useAuthStore();
 
     const login = async (credentials : LoginCredentials) => {
+
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/usuarios/login`, {
                 method: "POST",
@@ -15,6 +16,8 @@ export const useAuth = () => {
                     "Content-Type": "application/json"
                 }
             });
+
+            
 
             if(!response.ok){
                 throw new Error("Credenciales incorrectas");
@@ -26,7 +29,7 @@ export const useAuth = () => {
 
             setAuth(data, data.token || ""); // Guarda el token y la información del usuario en el store
 
-            
+            console.log("Datos del usuario después del login:", data);
 
             return { success: true };
         } catch (error) {
