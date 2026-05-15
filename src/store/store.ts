@@ -17,7 +17,7 @@ export const useAuthStore = create<authState>()(
       token: null,
       isLoggedIn: false,
       setAuth: (user, token) => set({ user, token, isLoggedIn: true }),
-      clearAuth: () => set({ user: null, token: null }),
+      clearAuth: () => set({ user: null, token: null, isLoggedIn: false}),
     }),
     { name: 'auth-storage' } // Esto guarda la sesión en localStorage
   )

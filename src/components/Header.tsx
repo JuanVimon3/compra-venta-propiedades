@@ -6,13 +6,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react"
-import { useAuthStore } from "@/store/store";
+import {useAuth } from "@/hooks/useAuth";
+
 
 export default function Header() {
   const pathName = usePathname()
   const [menuOpen, setMenuOpen] = useState(false);
-  const  user  = useAuthStore(state => state.user?.nombre); // Solo obtenemos el nombre del usuario para mostrarlo en el header
-  const  logout = useAuthStore(state => state.clearAuth); // Obtenemos la función de logout para cerrar sesión desde el header
+  const { isLoggedIn, user, logout } = useAuth(); // Obtenemos la función de logout para cerrar sesión desde el header
 
   const [isMounted, setIsMounted] = useState(false);
 
@@ -28,10 +28,13 @@ export default function Header() {
 
   const links = [
     { href: "/", label: "Home" },
-    { href: "/createAccount", label: "Crear cuenta" },
-    { href: "/login", label: "Ingresar" },
-    {href: "userDashboard", label: "Panel de usuario"}
-  ]
+    !isLoggedIn && { href: "/createAccount", label: "Crear cuenta" },
+    !isLoggedIn && { href: "/login", label: "Ingresar" },
+    isLoggedIn ? {href: "userDashboard", label: "Panel de usuario"} : null // Muestra el enlace de perfil solo si el usuario está logueado
+  ].filter((link) : link is { href: string; label: string} => Boolean(link)); // Elimina los enlaces nulos
+
+  console.log("Datos del usuario en Header:", user?.nombre);
+  console.log("El nombre del usuario en Header:", user?.nombre);
 
   return (
     <header className="bg-[#840705] text-[#F7F6F6] py-4 px-6 relative shadow-md">
@@ -54,21 +57,21 @@ export default function Header() {
 
           {links.map((link) =>
             <Link
-              key={link.href}
-              href={link.href}
+              key={link!.href}
+              href={link!.href}
               onClick={() => setMenuOpen(false)}
               className={`
               block py-2 md:py-0
               ${pathName === link.href ? "font-semibold underline" : ""}
               `}
             >
-              {link.label}
+              {link!.label}
             </Link>
           )}
         </nav>
-        <nav className="flex items-center gap-4">
-          {user ? (<span>Bienvenido, {user}</span>) : null}
-          <button onClick={logout}>Salir</button>
+        <nav className="flex items-center gap-4 text-sm md:text-base">
+          {isLoggedIn ? (<span>Bienvenido, {user?.nombre}</span>) : null}
+          {isLoggedIn && (<button className="cursor-pointer hover:underline" onClick={logout}>Salir</button>)}
         </nav>
       </div>
 
