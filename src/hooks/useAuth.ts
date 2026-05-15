@@ -4,7 +4,7 @@ import { useAuthStore } from "@/store/store";
 import { LoginCredentials } from "@/types";
 
 export const useAuth = () => {
-    const { user, token, setAuth, clearAuth } = useAuthStore();
+    const { user, token, setAuth, clearAuth, isLoggedIn } = useAuthStore();
 
     const login = async (credentials : LoginCredentials) => {
         try {
@@ -22,7 +22,11 @@ export const useAuth = () => {
 
             const data = await response.json();
 
-            setAuth(data, ""); // Guarda el token y la información del usuario en el store
+             // Actualiza el estado de inicio de sesión
+
+            setAuth(data, data.token || ""); // Guarda el token y la información del usuario en el store
+
+            
 
             return { success: true };
         } catch (error) {
@@ -32,8 +36,8 @@ export const useAuth = () => {
     }
 
     const logout = () => {
-        clearAuth(); // Limpia la sesión del usuario en el store
+        clearAuth(); // Limpia la sesión del usuario en el store y cierra la sesión en el backend si es necesario
     };
 
-    return { user, token, login, logout };
+    return { user, token, login, logout, isLoggedIn };
 }
