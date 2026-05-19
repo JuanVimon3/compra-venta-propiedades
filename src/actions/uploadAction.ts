@@ -39,8 +39,8 @@ export async function uploadImageToGCP(formData: FormData) {
     const publicUrl = `https://storage.googleapis.com/${bucketName}/${uniqueFileName}`;
 
     return { success: true, url: publicUrl };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error subiendo a GCP:', error);
-    return { success: false, error: error.message || 'Error interno del servidor' };
+    return { success: false, error: (error as Error).message || 'Error interno del servidor' };
   }
 }
