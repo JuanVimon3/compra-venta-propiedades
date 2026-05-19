@@ -4,7 +4,7 @@ import { useState } from "react";
 import { uploadImageToGCP } from "@/actions/uploadAction";
 import Image from "next/image";
 import { useAuth } from "@/hooks/useAuth";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 //Este componente es la página del panel de usuario, donde los usuarios pueden registrar y editar sus propiedades. Incluye un formulario con campos para el tipo de propiedad, descripción, ubicación, imágenes y precio. El diseño es limpio y organizado, con un enfoque en la facilidad de uso. Los usuarios pueden seleccionar el tipo de propiedad mediante casillas de verificación, ingresar una descripción y ubicación, adjuntar imágenes de la propiedad y establecer un precio. Este componente es esencial para que los usuarios puedan gestionar sus propiedades dentro de la aplicación.
 
