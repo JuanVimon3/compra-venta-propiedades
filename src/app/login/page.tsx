@@ -35,7 +35,7 @@ export default function Login() {
 
   return (
     <form action="" className="flex flex-col items-center">
-      <h1 className="flex flex-col items-center font-bold pt-20 pb-20 text-3xl">Ingresa a tu cuenta</h1>
+      <h3 className="flex flex-col items-center font-bold pt-20 pb-20 text-3xl">Ingresa a tu cuenta</h3>
       <h5 className="text-gray-500">Loguéate ingresando tu correo y contraseña</h5>
 
       {/* Renderizado condicional del mensaje de error */}
