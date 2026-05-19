@@ -5,6 +5,12 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
+        hostname: 'storage.googleapis.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'images.unsplash.com',
         port: '',
         pathname: '/**',
@@ -21,6 +27,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-};
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+  
+  }
+}
 
 export default nextConfig;
