@@ -177,7 +177,7 @@ export default function UserDashboard() {
 
       <button 
         className="flex items-center justify-center bg-[#840705] w-80 border rounded-md mb-10 mt-6 py-2 text-white cursor-pointer hover:bg-[#5c0404] transition" 
-        disabled={uploading}
+        disabled={uploading || !imageUrl}
         type="submit"
       >
         {uploading ? "Subiendo imagen..." : "Registrar propiedad"}
