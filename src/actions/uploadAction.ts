@@ -5,8 +5,10 @@ import { Storage } from '@google-cloud/storage';
 
 
 // Inicializamos el cliente de Google Cloud Storage usando las variables de entorno
-const privateKey = process.env.GCP_PRIVATE_KEY 
-  ? process.env.GCP_PRIVATE_KEY.replace(/\\n/g, '\n') 
+const privateKey = process.env.GCP_PRIVATE_KEY
+  ? (process.env.GCP_PRIVATE_KEY.startsWith('-----BEGIN')
+      ? process.env.GCP_PRIVATE_KEY.replace(/\\n/g, '\n')
+      : Buffer.from(process.env.GCP_PRIVATE_KEY, 'base64').toString('utf-8'))
   : undefined;
 
 const storage = new Storage({
