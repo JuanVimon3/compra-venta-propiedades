@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { uploadImageToGCP } from "@/actions/uploadAction";
 import Image from "next/image";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
@@ -18,28 +17,38 @@ export default function UserDashboard() {
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-  const handleFilechange = async(e: React.ChangeEvent<HTMLInputElement>) => {
-    if(!e.target.files || e.target.files.length === 0) return;
+  const handleFilechange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  if (!e.target.files || e.target.files.length === 0) return;
 
-    const file = e.target.files[0];
-    setUploading(true);
+  const file = e.target.files[0];
+  setUploading(true);
 
-    const formData = new FormData();
-    formData.append('file', file);
+  const formData = new FormData();
+  formData.append('file', file);
 
-    const result = await uploadImageToGCP(formData);
+  try {
+    // Reemplazamos el Server Action por una petición HTTP nativa a nuestra API
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const result = await response.json();
     setUploading(false);
 
-    if(result.success && result.url){
+    if (result.success && result.url) {
       setImageUrl(result.url);
       console.log("Imagen subida exitosamente:", result.url);
-    } else if (!result.success) {
-      console.log("Resultado detallado del servidor:", result.error);
-      alert(result.error);
-    }else {
-      console.error("Error al subir la imagen:", result.error);
+    } else {
+      console.error("Resultado detallado del servidor:", result.error);
+      alert("Error del servidor: " + result.error);
     }
+  } catch (error: unknown) {
+    setUploading(false);
+    console.error("Error en la petición de subida:", error);
+    alert("Error de red: " + (error instanceof Error ? error.message : 'Error desconocido'));
   }
+};
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
