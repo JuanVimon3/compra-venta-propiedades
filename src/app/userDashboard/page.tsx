@@ -33,7 +33,10 @@ export default function UserDashboard() {
     if(result.success && result.url){
       setImageUrl(result.url);
       console.log("Imagen subida exitosamente:", result.url);
-    } else {
+    } else if (!result.success) {
+      console.log("Resultado detallado del servidor:", result.error);
+      alert(result.error);
+    }else {
       console.error("Error al subir la imagen:", result.error);
     }
   }

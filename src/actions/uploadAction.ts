@@ -9,17 +9,31 @@ export async function uploadImageToGCP(formData: FormData) {
       throw new Error('No se encontró ningún archivo en la petición.');
     }
 
-    // Inicializamos la llave privada JUSTO AQUÍ, dentro de la petición
     const rawPrivateKey = process.env.GCP_PRIVATE_KEY;
+    
+    // CASO DE PRUEBA 1: ¿La variable de entorno si existe en Vercel?
     if (!rawPrivateKey) {
-      throw new Error('La variable GCP_PRIVATE_KEY no está definida en el entorno.');
+      return { 
+        success: false, 
+        error: "DEBUG: GCP_PRIVATE_KEY no está llegando al servidor. Revisa los Env Variables de Vercel." 
+      };
     }
 
+    // Procesamos la llave según el formato que venga
     const privateKey = rawPrivateKey.startsWith('-----BEGIN')
       ? rawPrivateKey.replace(/\\n/g, '\n')
       : Buffer.from(rawPrivateKey, 'base64').toString('utf-8');
 
-    // Instanciamos el cliente de Storage bajo demanda
+    // CASO DE PRUEBA 2: Inspeccionar cómo se ve la llave procesada antes de dársela a Google
+    // Evaluamos longitud y si tiene la cabecera correcta para descartar problemas de formato
+    if (!privateKey.includes('-----BEGIN PRIVATE KEY-----')) {
+      return {
+        success: false,
+        error: `DEBUG: Estructura de llave inválida tras procesar. Longitud: ${privateKey.length}. Empieza con: ${privateKey.substring(0, 20)}...`
+      };
+    }
+
+    // Instanciamos el cliente bajo demanda
     const storage = new Storage({
       projectId: process.env.GCP_PROJECT_ID,
       credentials: {
@@ -30,30 +44,27 @@ export async function uploadImageToGCP(formData: FormData) {
 
     const bucketName = process.env.GCP_BUCKET_NAME || '';
     if (!bucketName) {
-      throw new Error('La variable GCP_BUCKET_NAME no está definida.');
+      return { success: false, error: "DEBUG: GCP_BUCKET_NAME está vacío." };
     }
 
-    // Procesamiento del buffer de la imagen
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-
     const bucket = storage.bucket(bucketName);
     
-    // Creamos un nombre de archivo único
     const uniqueFileName = `${Date.now()}-${file.name.replace(/\s+/g, '_')}`;
     const gcpFile = bucket.file(uniqueFileName);
 
-    // Subimos el archivo al bucket
     await gcpFile.save(buffer, {
       metadata: { contentType: file.type },
     });
 
-    // Construimos la URL pública estándar
     const publicUrl = `https://storage.googleapis.com/${bucketName}/${uniqueFileName}`;
-
     return { success: true, url: publicUrl };
+
   } catch (error: unknown) {
-    console.error('Error subiendo a GCP en el servidor:', error);
-    return { success: false, error: (error as Error).message || 'Error interno del servidor' };
+    // CAPTURA CRÍTICA: Retornamos el mensaje detallado exacto del error criptográfico nativo hacia el frontend
+    return { 
+      success: false, 
+      error: `DEBUG SERVER ERROR: ${error instanceof Error ? error.message : 'Error sin mensaje'} | Stack: ${error instanceof Error && error.stack ? error.stack.substring(0, 150) : 'Sin stack trace'}`}
   }
 }
