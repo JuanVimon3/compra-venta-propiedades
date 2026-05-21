@@ -1,5 +1,10 @@
+export const dynamic = 'force-dynamic'; // Asegura ejecución pura en el backend
+
 import { NextResponse } from 'next/server';
 import { Storage } from '@google-cloud/storage';
+
+
+
 
 export async function POST(request: Request) {
   try {
