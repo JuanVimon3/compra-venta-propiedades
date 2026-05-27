@@ -1,12 +1,8 @@
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic'; // Asegura ejecución pura en el backend
 
-
 import { NextResponse } from 'next/server';
 import { Storage } from '@google-cloud/storage';
-
-
-
 
 export async function POST(request: Request) {
   try {
@@ -16,40 +12,39 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'No se encontró ningún archivo.' }, { status: 400 });
     }
 
-    
+    const rawPrivateKey = process.env.GCP_PRIVATE_KEY;
+    if (!rawPrivateKey) {
+      return NextResponse.json({ success: false, error: 'GCP_PRIVATE_KEY no configurada.' }, { status: 500 });
+    }
 
-const rawPrivateKey = process.env.GCP_PRIVATE_KEY;
-if (!rawPrivateKey) {
-  return NextResponse.json({ success: false, error: 'GCP_PRIVATE_KEY no configurada.' }, { status: 500 });
-}
+    const cleanKey = rawPrivateKey.replace(/^['"]|['"]$/g, '').trim();
 
+    let privateKey = '';
+    if (cleanKey.startsWith('-----BEGIN')) {
+      privateKey = cleanKey.replace(/\\n/g, '\n');
+    } else {
+      const noNewLines = cleanKey.replace(/\s/g, '');
+      privateKey = Buffer.from(noNewLines, 'base64').toString('utf-8');
+    }
 
-const cleanKey = rawPrivateKey.replace(/^['"]|['"]$/g, '').trim();
+    // 🔍 INSPECCIÓN DE SEGURIDAD (Ubicada exactamente donde se procesa)
+    console.log("=== INSPECCIÓN DE LLAVE ===");
+    console.log("¿La llave limpia tiene texto?:", !!cleanKey);
+    console.log("¿Comienza con BEGIN?:", cleanKey.startsWith('-----BEGIN'));
+    console.log("Primeros 50 caracteres decodificados:", privateKey.substring(0, 50));
+    console.log("===========================");
 
+    if (!privateKey.includes('-----BEGIN PRIVATE KEY-----')) {
+      return NextResponse.json({ success: false, error: 'La llave privada no se decodificó correctamente.' }, { status: 500 });
+    }
 
-let privateKey = '';
-if (cleanKey.startsWith('-----BEGIN')) {
-  
-  privateKey = cleanKey.replace(/\\n/g, '\n');
-} else {
-  
-  const noNewLines = cleanKey.replace(/\s/g, '');
-  privateKey = Buffer.from(noNewLines, 'base64').toString('utf-8');
-}
-
-
-if (!privateKey.includes('-----BEGIN PRIVATE KEY-----')) {
-  return NextResponse.json({ success: false, error: 'La llave privada no se decodificó correctamente.' }, { status: 500 });
-}
-
-const storage = new Storage({
-  projectId: process.env.GCP_PROJECT_ID,
-  credentials: {
-    client_email: process.env.GCP_CLIENT_EMAIL,
-    private_key: privateKey,
-  },
-});
-
+    const storage = new Storage({
+      projectId: process.env.GCP_PROJECT_ID,
+      credentials: {
+        client_email: process.env.GCP_CLIENT_EMAIL,
+        private_key: privateKey, 
+      },
+    });
 
     const bucketName = process.env.GCP_BUCKET_NAME || '';
     const bytes = await file.arrayBuffer();
