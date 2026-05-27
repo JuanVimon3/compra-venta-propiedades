@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 export default function UserDashboard() {
 
   const [uploading, setUploading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imagesUrls, setImagesUrls] = useState<string[]>([]);
   const { user } = useAuth();
 
   const router = useRouter();
@@ -37,7 +37,7 @@ export default function UserDashboard() {
     setUploading(false);
 
     if (result.success && result.url) {
-      setImageUrl(result.url);
+      setImagesUrls((prev) => [...prev, result.url]);
       console.log("Imagen subida exitosamente:", result.url);
     } else {
       console.error("Resultado detallado del servidor:", result.error);
@@ -66,7 +66,7 @@ export default function UserDashboard() {
       area: rawData.area.toString().replace(/[^0-9]/g, ''),
       bedrooms: Number(rawData.bedrooms),
       bathrooms: Number(rawData.bathrooms), 
-      images: imageUrl ? [imageUrl] : [], // Enviamos la URL de la imagen como un array
+      images: imagesUrls, // Enviamos las URLs de las imágenes como un array
       type: "Venta",
       vendedor: {
         usuario: {
@@ -176,20 +176,22 @@ export default function UserDashboard() {
         </p>
       )}
 
-      {imageUrl && (
-        <div className="mt-3">
-          <p className="text-xs text-green-600 font-medium mb-1">
-            Imagen subida exitosamente. URL: {imageUrl}
-          </p>
-         <Image src={imageUrl} alt="Imagen de la propiedad" width={200} height={200} />
+      {imagesUrls.length > 0 && (
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          {imagesUrls.map((url, index) => (
+            <div key= {index} className="relative w-full h-40 rounded-md overflow-hidden">
+              <Image src={url} alt={ `Imagen ${index + 1}`} layout="fill" objectFit="cover" />
+            </div>
+          ))}
         </div>
-      ) }
+      )}
+
       </div>
 
 
       <button 
         className="flex items-center justify-center bg-[#840705] w-80 border rounded-md mb-10 mt-6 py-2 text-white cursor-pointer hover:bg-[#5c0404] transition" 
-        disabled={uploading || !imageUrl}
+        disabled={uploading || imagesUrls.length === 0}
         type="submit"
       >
         {uploading ? "Subiendo imagen..." : "Registrar propiedad"}
