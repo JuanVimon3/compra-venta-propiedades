@@ -66,7 +66,7 @@ export default function UserDashboard() {
       area: rawData.area.toString().replace(/[^0-9]/g, ''),
       bedrooms: Number(rawData.bedrooms),
       bathrooms: Number(rawData.bathrooms), 
-      image: imageUrl || rawData.image,
+      images: imageUrl ? [imageUrl] : [], // Enviamos la URL de la imagen como un array
       type: "Venta",
       vendedor: {
         usuario: {
