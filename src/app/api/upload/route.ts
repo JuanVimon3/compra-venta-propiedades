@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       privateKey = Buffer.from(noNewLines, 'base64').toString('utf-8');
     }
 
-    // 🔍 INSPECCIÓN DE SEGURIDAD (Ubicada exactamente donde se procesa)
+    // INSPECCIÓN DE SEGURIDAD (Ubicada exactamente donde se procesa)
     console.log("=== INSPECCIÓN DE LLAVE ===");
     console.log("¿La llave limpia tiene texto?:", !!cleanKey);
     console.log("¿Comienza con BEGIN?:", cleanKey.startsWith('-----BEGIN'));
