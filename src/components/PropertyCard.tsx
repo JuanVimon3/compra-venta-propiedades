@@ -12,13 +12,15 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   
   if (!property) return null;
 
-  console.log(`Propiedad ${property.idPropiedad}: URL de imagen ->`, property.image);
+  console.log(`Propiedad ${property.idPropiedad}: URL de imagen ->`, property.images);
 
   // const imageSrc = (property.image && property.image.trim() !== "") 
   //   ? property.image 
   //   : "https://via.placeholder.com/600x400?text=Sin+Imagen";
 
-  const imageUrl = property.image || property.imagen || property.imageUrl;
+  const imageUrl = (Array.isArray(property.images) && property.images.length > 0)
+    ? property.images[0]
+    : "";
 
   const finalSrc = (imageUrl && imageUrl.startsWith("http") && !imageUrl.includes("unsplash"))
    ? imageUrl
