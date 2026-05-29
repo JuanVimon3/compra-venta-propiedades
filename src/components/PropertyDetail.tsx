@@ -9,7 +9,9 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
   
   if (!property) return <div className="p-10 text-center">Cargando...</div>;
 
-  const imageUrl = property.image || property.imagen || property.imageUrl;
+  const imageUrl = (Array.isArray(property.images) && property.images.length > 0)
+    ? property.images[0]
+    : "";
 
 const imageSrc = (imageUrl && imageUrl.startsWith("http") && !imageUrl.includes("unsplash"))
   ? imageUrl 
