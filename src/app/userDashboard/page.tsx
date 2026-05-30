@@ -14,7 +14,7 @@ export default function UserDashboard() {
 
   const [uploading, setUploading] = useState(false);
   const [imagesUrls, setImagesUrls] = useState<string[]>([]);
-userDashboardFull
+
   const [myProperties, setMyProperties] = useState<Property[]>([]);
   const [loadingProperties, setLoadingProperties] = useState(true);
 
@@ -148,18 +148,16 @@ userDashboardFull
   }
 
   return (
-    //Extraer el ID del usuario autenticado para registrar y mostrar solo sus propiedades
+    <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
 
-    <div className = "max-w-7xl max-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
-
-      {/*Columna de formulario*/}
-      <div className= "lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-        <form action= "" className="flex flex-col items-center" onSubmit={handleSubmit} >
-          <h3 className="flex flex-col items-center font-bold pt-20 pb-20 text-3xl">Registra tus propiedades</h3>
-          <h5 className="text-gray-500">Llena el formulario para registrar tus propiedades</h5>
+      {/* Columna de formulario */}
+      <div className="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <form className="flex flex-col items-center" onSubmit={handleSubmit}>
+          <h3 className="flex flex-col items-center font-bold pt-10 pb-6 text-3xl text-center">Registra tus propiedades</h3>
+          <h5 className="text-gray-500 text-sm text-center mb-6">Llena el formulario para registrar tus propiedades</h5>
 
           <div className="relative w-80 mt-2">
-            <input type="string" id="titulo" name="titulo" className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
+            <input type="text" id="titulo" name="titulo" className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
             <label htmlFor="titulo" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
               Título de la propiedad
             </label>
@@ -173,7 +171,7 @@ userDashboardFull
           </div>
 
           <div className="relative w-80 mt-2">
-            <input type="string" id="ubicacion" name="ubicacion"  className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
+            <input type="text" id="ubicacion" name="ubicacion" className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
             <label htmlFor="ubicacion" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
               Ubicación
             </label>
@@ -187,7 +185,7 @@ userDashboardFull
           </div>
 
           <div className="relative w-80 mt-2">
-            <input type="string" id="area" name="area"  className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
+            <input type="text" id="area" name="area" className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
             <label htmlFor="area" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
               ¿Cuántos metros cuadrados tiene la propiedad?
             </label>
@@ -201,137 +199,74 @@ userDashboardFull
           </div>
 
           <div className="relative w-80 mt-2">
-            <input type="number" id="bathrooms" name="bathrooms"  className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
+            <input type="number" id="bathrooms" name="bathrooms" className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
             <label htmlFor="bathrooms" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
               ¿Cuántos baños tiene la propiedad?
             </label>
           </div>
-          
-          {/* Actulizar el formulario para que permita subir imágenes desde el dispositivo del usuario, en lugar de solo ingresar una URL. Esto mejorará la experiencia del usuario al permitirle mostrar sus propiedades con fotos reales. */}
 
+          {/* Sección de imágenes */}
           <div className="relative w-80 mt-4 p-4 border border-dashed border-gray-300 rounded-md bg-gray-50">
             <label className="block mb-2 text-sm font-medium text-gray-700">
               Subir imagen de la propiedad
             </label>
             <input
-            type="file"
-            accept="image/*"
-            onChange={handleFilechange}
-            disabled={uploading}
-            className="block w-full text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-white focus:outline-none p-2 disabled:opacity-50"
-          />
+              type="file"
+              accept="image/*"
+              onChange={handleFilechange}
+              disabled={uploading}
+              className="block w-full text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-white focus:outline-none p-2 disabled:opacity-50"
+            />
 
-          {uploading && (
-            <p className="mt-2 text-xs text-blue-600 font-medium animate-pulse">
-              Subiendo imagen a Google Cloud Storage... Por favor espera.
-            </p>
-          )}
+            {uploading && (
+              <p className="mt-2 text-xs text-blue-600 font-medium animate-pulse">
+                Subiendo imagen a Google Cloud Storage... Por favor espera.
+              </p>
+            )}
 
-          {imagesUrls.length > 0 && (
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              {imagesUrls.map((url, index) => (
-                <div key= {index} className="relative w-full h-40 rounded-md overflow-hidden">
-                  <Image src={url} alt={ `Imagen ${index + 1}`} layout="fill" objectFit="cover" />
-                </div>
-              ))}
-            </div>
-          )}
-
+            {imagesUrls.length > 0 && (
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                {imagesUrls.map((url, index) => (
+                  <div key={index} className="relative w-full h-40 rounded-md overflow-hidden">
+                    <Image src={url} alt={`Imagen ${index + 1}`} layout="fill" objectFit="cover" />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
-
-          <button 
-            className="flex items-center justify-center bg-[#840705] w-80 border rounded-md mb-10 mt-6 py-2 text-white cursor-pointer hover:bg-[#5c0404] transition" 
+          <button
+            className="flex items-center justify-center bg-[#840705] w-80 border rounded-md mb-10 mt-6 py-2 text-white cursor-pointer hover:bg-[#5c0404] transition disabled:opacity-50"
             disabled={uploading || imagesUrls.length === 0}
             type="submit"
           >
             {uploading ? "Subiendo imagen..." : "Registrar propiedad"}
           </button>
-
         </form>
       </div>
 
-      {/*Columna de listado de propiedades*/}
-      <div className= "lg:col-span-2">
-          <h3 className= "font-bold text-2xl text-gray-800 mb-2">Mis propiedades</h3>
-          {loadingProperties ? (
-            <div className="text-gray-500 animate-pulse">
-              Cargando propiedades...
-            </div> ):
-            <div className="text-center py-16 bg-gray-50 rounded-xl border border-gray-200 p-6">
+      {/* Columna de listado de propiedades */}
+      <div className="lg:col-span-2">
+        <h3 className="font-bold text-2xl text-gray-800 mb-4">Mis propiedades</h3>
+        
+        {loadingProperties ? (
+          <div className="text-gray-500 animate-pulse">
+            Cargando propiedades...
+          </div>
+        ) : myProperties.length === 0 ? (
+          <div className="text-center py-16 bg-gray-50 rounded-xl border border-gray-200 p-6">
             <p className="text-gray-600 font-medium">Aún no has registrado ninguna propiedad.</p>
             <p className="text-gray-400 text-xs mt-1">Usa el formulario de la izquierda para publicar tu primer inmueble.</p>
           </div>
-          }
-
+        ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {myProperties.map((propiedad) => (
               <PropertyCard key={propiedad.idPropiedad} property={propiedad} />
             ))}
           </div>
-
-userDashboardFull
+        )}
       </div>
-
 
     </div>
-
-      <div className="relative w-80 mt-2">
-        <input type="number" id="bedrooms" name="bedrooms" className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
-        <label htmlFor="bedrooms" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
-          ¿Cuántas habitaciones tiene la propiedad?
-        </label>
-      </div>
-
-      <div className="relative w-80 mt-2">
-        <input type="number" id="bathrooms" name="bathrooms"  className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
-        <label htmlFor="bathrooms" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
-          ¿Cuántos baños tiene la propiedad?
-        </label>
-      </div>
-      
-      {/* Actulizar el formulario para que permita subir imágenes desde el dispositivo del usuario, en lugar de solo ingresar una URL. Esto mejorará la experiencia del usuario al permitirle mostrar sus propiedades con fotos reales. */}
-
-      <div className="relative w-80 mt-4 p-4 border border-dashed border-gray-300 rounded-md bg-gray-50">
-        <label className="block mb-2 text-sm font-medium text-gray-700">
-          Subir imagen de la propiedad
-        </label>
-         <input
-        type="file"
-        accept="image/*"
-        onChange={handleFilechange}
-        disabled={uploading}
-        className="block w-full text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-white focus:outline-none p-2 disabled:opacity-50"
-      />
-
-      {uploading && (
-        <p className="mt-2 text-xs text-blue-600 font-medium animate-pulse">
-          Subiendo imagen a Google Cloud Storage... Por favor espera.
-        </p>
-      )}
-
-      {imagesUrls.length > 0 && (
-        <div className="mt-4 grid grid-cols-2 gap-2">
-          {imagesUrls.map((url, index) => (
-            <div key= {index} className="relative w-full h-40 rounded-md overflow-hidden">
-              <Image src={url} alt={ `Imagen ${index + 1}`} layout="fill" objectFit="cover" />
-            </div>
-          ))}
-        </div>
-      )}
-
-      </div>
-
-
-      <button 
-        className="flex items-center justify-center bg-[#840705] w-80 border rounded-md mb-10 mt-6 py-2 text-white cursor-pointer hover:bg-[#5c0404] transition" 
-        disabled={uploading || imagesUrls.length === 0}
-        type="submit"
-      >
-        {uploading ? "Subiendo imagen..." : "Registrar propiedad"}
-      </button>
- main
-
-    
-  )
+  );
 }
