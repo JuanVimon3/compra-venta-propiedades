@@ -7,33 +7,27 @@ import { useRouter } from "next/navigation";
 import PropertyCard from "@/components/PropertyCard";
 import { Property } from "@/types";  
 
-
 //Este componente es la página del panel de usuario, donde los usuarios pueden registrar y editar sus propiedades. Incluye un formulario con campos para el tipo de propiedad, descripción, ubicación, imágenes y precio. El diseño es limpio y organizado, con un enfoque en la facilidad de uso. Los usuarios pueden seleccionar el tipo de propiedad mediante casillas de verificación, ingresar una descripción y ubicación, adjuntar imágenes de la propiedad y establecer un precio. Este componente es esencial para que los usuarios puedan gestionar sus propiedades dentro de la aplicación.
 
 export default function UserDashboard() {
 
   const [uploading, setUploading] = useState(false);
   const [imagesUrls, setImagesUrls] = useState<string[]>([]);
-
   const [myProperties, setMyProperties] = useState<Property[]>([]);
   const [loadingProperties, setLoadingProperties] = useState(true);
 
-
   const { user } = useAuth();
-
   // const router = useRouter();
-
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-
-// Función para traer las propiedades del usuario autenticado desde la API. Se ejecuta al montar el componente y cada vez que el usuario cambia. Actualiza el estado con las propiedades obtenidas o muestra un error en caso de fallo.
+  // Función para traer las propiedades del usuario autenticado desde la API.
   const fetchMyProperties = useCallback(async () => {
     if (!user?.idUsuario) return;
 
     try {
       const response = await fetch(`${apiUrl}/api/propiedades/usuario/${user.idUsuario}`, {
         method: 'GET',
-        credentials: 'include', // Asegura que las cookies de sesión se envíen con la solicitud
+        credentials: 'include',
       });
 
       if (response.ok) {
@@ -44,12 +38,10 @@ export default function UserDashboard() {
       } 
     } catch (error) {
       console.error("Error al obtener propiedades del usuario:", error);
-    } finally {
+    } filey {
       setLoadingProperties(false);
     }
   }, [user?.idUsuario, apiUrl]);
-
-  //Hook que inicia la búsqueda cuando el usuario está autenticado
 
   useEffect(() => {
     if (user?.idUsuario) {
@@ -57,49 +49,43 @@ export default function UserDashboard() {
     }
   }, [user, fetchMyProperties]);
 
-
-  
-
   const handleFilechange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  if (!e.target.files || e.target.files.length === 0) return;
+    if (!e.target.files || e.target.files.length === 0) return;
 
-  const file = e.target.files[0];
-  setUploading(true);
+    const file = e.target.files[0];
+    setUploading(true);
 
-  const formData = new FormData();
-  formData.append('file', file);
+    const formData = new FormData();
+    formData.append('file', file);
 
-  try {
-    // Reemplazamos el Server Action por una petición HTTP nativa a nuestra API
-    const response = await fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
-    });
+    try {
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
 
-    const result = await response.json();
-    setUploading(false);
+      const result = await response.json();
+      setUploading(false);
 
-    if (result.success && result.url) {
-      setImagesUrls((prev) => [...prev, result.url]);
-      console.log("Imagen subida exitosamente:", result.url);
-    } else {
-      console.error("Resultado detallado del servidor:", result.error);
-      alert("Error del servidor: " + result.error);
+      if (result.success && result.url) {
+        setImagesUrls((prev) => [...prev, result.url]);
+        console.log("Imagen subida exitosamente:", result.url);
+      } else {
+        console.error("Resultado detallado del servidor:", result.error);
+        alert("Error del servidor: " + result.error);
+      }
+    } catch (error: unknown) {
+      setUploading(false);
+      console.error("Error en la petición de subida:", error);
+      alert("Error de red: " + (error instanceof Error ? error.message : 'Error desconocido'));
     }
-  } catch (error: unknown) {
-    setUploading(false);
-    console.error("Error en la petición de subida:", error);
-    alert("Error de red: " + (error instanceof Error ? error.message : 'Error desconocido'));
-  }
-};
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
     const rawData = Object.fromEntries(formData.entries());
-
-    // const areaNumerica = Number(rawData.area.toString().replace(/[^0-9]/g, ''));
 
     const data = {
       titulo: rawData.titulo,
@@ -109,7 +95,7 @@ export default function UserDashboard() {
       area: rawData.area.toString().replace(/[^0-9]/g, ''),
       bedrooms: Number(rawData.bedrooms),
       bathrooms: Number(rawData.bathrooms), 
-      images: imagesUrls, // Enviamos las URLs de las imágenes como un array
+      images: imagesUrls,
       type: "Venta",
       vendedor: {
         usuario: {
@@ -128,24 +114,19 @@ export default function UserDashboard() {
       })
       if(response.ok){
         console.log("Propiedad registrada exitosamente");
-
-        // router.push("/");
         setImagesUrls([]);
         event.currentTarget.reset();
-        fetchMyProperties(); // Refrescar la lista de propiedades después de registrar una nueva
-
+        fetchMyProperties();
       } else{
         const rawResponse = await response.text();
-        console.log("--- INTENTO DE REGISTRO FALLIDO ---"); // Mensaje de control
+        console.log("--- INTENTO DE REGISTRO FALLIDO ---");
         console.log("Status:", response.status);
         console.log("Cuerpo del error:", rawResponse);
-        console.error("Error al registrar propiedad:", rawResponse);
       }
     } catch (error){
       console.error("Error al registrar propiedad:", error);
     }
-
-  }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
