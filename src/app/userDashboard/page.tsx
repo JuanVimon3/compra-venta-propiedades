@@ -38,7 +38,7 @@ export default function UserDashboard() {
       } 
     } catch (error) {
       console.error("Error al obtener propiedades del usuario:", error);
-    } filey {
+    } finally {
       setLoadingProperties(false);
     }
   }, [user?.idUsuario, apiUrl]);
