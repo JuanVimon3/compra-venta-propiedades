@@ -14,8 +14,10 @@ export default function UserDashboard() {
 
   const [uploading, setUploading] = useState(false);
   const [imagesUrls, setImagesUrls] = useState<string[]>([]);
+userDashboardFull
   const [myProperties, setMyProperties] = useState<Property[]>([]);
   const [loadingProperties, setLoadingProperties] = useState(true);
+
 
   const { user } = useAuth();
 
@@ -268,10 +270,67 @@ export default function UserDashboard() {
             ))}
           </div>
 
+userDashboardFull
       </div>
 
 
     </div>
+
+      <div className="relative w-80 mt-2">
+        <input type="number" id="bedrooms" name="bedrooms" className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
+        <label htmlFor="bedrooms" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
+          ¿Cuántas habitaciones tiene la propiedad?
+        </label>
+      </div>
+
+      <div className="relative w-80 mt-2">
+        <input type="number" id="bathrooms" name="bathrooms"  className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
+        <label htmlFor="bathrooms" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
+          ¿Cuántos baños tiene la propiedad?
+        </label>
+      </div>
+      
+      {/* Actulizar el formulario para que permita subir imágenes desde el dispositivo del usuario, en lugar de solo ingresar una URL. Esto mejorará la experiencia del usuario al permitirle mostrar sus propiedades con fotos reales. */}
+
+      <div className="relative w-80 mt-4 p-4 border border-dashed border-gray-300 rounded-md bg-gray-50">
+        <label className="block mb-2 text-sm font-medium text-gray-700">
+          Subir imagen de la propiedad
+        </label>
+         <input
+        type="file"
+        accept="image/*"
+        onChange={handleFilechange}
+        disabled={uploading}
+        className="block w-full text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-white focus:outline-none p-2 disabled:opacity-50"
+      />
+
+      {uploading && (
+        <p className="mt-2 text-xs text-blue-600 font-medium animate-pulse">
+          Subiendo imagen a Google Cloud Storage... Por favor espera.
+        </p>
+      )}
+
+      {imagesUrls.length > 0 && (
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          {imagesUrls.map((url, index) => (
+            <div key= {index} className="relative w-full h-40 rounded-md overflow-hidden">
+              <Image src={url} alt={ `Imagen ${index + 1}`} layout="fill" objectFit="cover" />
+            </div>
+          ))}
+        </div>
+      )}
+
+      </div>
+
+
+      <button 
+        className="flex items-center justify-center bg-[#840705] w-80 border rounded-md mb-10 mt-6 py-2 text-white cursor-pointer hover:bg-[#5c0404] transition" 
+        disabled={uploading || imagesUrls.length === 0}
+        type="submit"
+      >
+        {uploading ? "Subiendo imagen..." : "Registrar propiedad"}
+      </button>
+ main
 
     
   )
