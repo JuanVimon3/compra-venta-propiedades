@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { useAuth } from "@/hooks/useAuth";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import PropertyCard from "@/components/PropertyCard";
 import { Property } from "@/types";  
 
@@ -15,6 +15,7 @@ export default function UserDashboard() {
   const [imagesUrls, setImagesUrls] = useState<string[]>([]);
   const [myProperties, setMyProperties] = useState<Property[]>([]);
   const [loadingProperties, setLoadingProperties] = useState(true);
+  const [editingProperty, setEditingProperty] = useState<Property | null>(null);
 
   const { user } = useAuth();
   // const router = useRouter();
@@ -79,6 +80,9 @@ export default function UserDashboard() {
       console.error("Error en la petición de subida:", error);
       alert("Error de red: " + (error instanceof Error ? error.message : 'Error desconocido'));
     }
+
+    
+
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -104,16 +108,24 @@ export default function UserDashboard() {
       }
     };
 
+    // Si estamos editando, la URL será diferente y el método será PUT en lugar de POST.
+    const isEditing = editingProperty !== null;
+    const url = isEditing 
+      ? `${apiUrl}/api/propiedades/${editingProperty?.idPropiedad}`
+      : `${apiUrl}/api/propiedades`;
+
+
+
     try {
-      const response = await fetch(`${apiUrl}/api/propiedades` , {
-        method: 'POST',
+      const response = await fetch(url , {
+        method: isEditing ? 'PUT' : 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
       })
       if(response.ok){
-        console.log("Propiedad registrada exitosamente");
+        console.log(isEditing ? "--- PROPIEDAD ACTUALIZADA EXITOSAMENTE ---" : "--- PROPIEDAD REGISTRADA EXITOSAMENTE ---");
         setImagesUrls([]);
         event.currentTarget.reset();
         fetchMyProperties();
@@ -128,59 +140,133 @@ export default function UserDashboard() {
     }
   };
 
+  const handleDeleteProperty = async (idPropiedad: number) => {
+    if (!confirm("¿Estás seguro de que deseas eliminar esta propiedad?")) return;
+
+    try {
+      const response = await fetch(`${apiUrl}/api/propiedades/${idPropiedad}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        console.log("Propiedad eliminada exitosamente");
+        fetchMyProperties();
+      } else {
+        const rawResponse = await response.text();
+        console.error("Error al eliminar la propiedad:", rawResponse);
+      }
+    } catch (error) {
+      console.error("Error al eliminar la propiedad:", error);
+    }
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
 
       {/* Columna de formulario */}
       <div className="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
         <form className="flex flex-col items-center" onSubmit={handleSubmit}>
-          <h3 className="flex flex-col items-center font-bold pt-10 pb-6 text-3xl text-center">Registra tus propiedades</h3>
-          <h5 className="text-gray-500 text-sm text-center mb-6">Llena el formulario para registrar tus propiedades</h5>
+
+          <h3 className="flex flex-col items-center font-bold pt-10 pb-6 text-3xl text-center">
+            {editingProperty ? "Editar propiedad" : "Registrar nueva propiedad"}
+          </h3>
+
+          <h5 className="text-gray-500 text-sm text-center mb-6">
+            {editingProperty ? "Edita los datos de tu propiedad" : "Llena el formulario para registrar tus propiedades"}
+          </h5>
 
           <div className="relative w-80 mt-2">
-            <input type="text" id="titulo" name="titulo" className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
+            <input 
+              type="text" 
+              id="titulo" 
+              name="titulo"
+              key={editingProperty ? editingProperty.titulo : "titulo"}
+              defaultValue={editingProperty ? editingProperty.titulo : ""}
+              className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none"
+            />
             <label htmlFor="titulo" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
               Título de la propiedad
             </label>
           </div>
 
           <div className="relative w-80 mt-2">
-            <input type="text" id="descripcion" name="descripcion" required className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
+            <input 
+              type="text" 
+              id="descripcion" 
+              name="descripcion"
+              key={editingProperty ? editingProperty.descripcion : "descripcion"}
+              defaultValue={editingProperty ? editingProperty.descripcion : ""}
+              className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none"
+            />
             <label htmlFor="descripcion" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
               Descripción de la propiedad
             </label>
           </div>
 
           <div className="relative w-80 mt-2">
-            <input type="text" id="ubicacion" name="ubicacion" className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
+            <input 
+              type="text" 
+              id="ubicacion" 
+              name="ubicacion"
+              key={editingProperty ? editingProperty.ubicacion : "ubicacion"}
+              defaultValue={editingProperty ? editingProperty.ubicacion : ""}
+              className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none"
+            />
             <label htmlFor="ubicacion" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
               Ubicación
             </label>
           </div>
 
           <div className="relative w-80 mt-2">
-            <input type="number" id="precio" name="precio" className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
+            <input 
+              type="number" 
+              id="precio" 
+              name="precio"
+              key={editingProperty ? editingProperty.precio : "precio"}
+              defaultValue={editingProperty ? editingProperty.precio : ""}
+              className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none"
+            />
             <label htmlFor="precio" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
               Precio
             </label>
           </div>
 
           <div className="relative w-80 mt-2">
-            <input type="text" id="area" name="area" className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
+            <input 
+              type="text" 
+              id="area" 
+              name="area"
+              key={editingProperty ? editingProperty.area : "area"}
+              defaultValue={editingProperty ? editingProperty.area : ""}
+              className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none"
+            />
             <label htmlFor="area" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
               ¿Cuántos metros cuadrados tiene la propiedad?
             </label>
           </div>
 
           <div className="relative w-80 mt-2">
-            <input type="number" id="bedrooms" name="bedrooms" className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
+            <input 
+              type="number" 
+              id="bedrooms" 
+              name="bedrooms"
+              key={editingProperty ? editingProperty.bedrooms : "bedrooms"}
+              defaultValue={editingProperty ? editingProperty.bedrooms : ""}
+              className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none"
+            />
             <label htmlFor="bedrooms" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
               ¿Cuántas habitaciones tiene la propiedad?
             </label>
           </div>
 
           <div className="relative w-80 mt-2">
-            <input type="number" id="bathrooms" name="bathrooms" className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none" />
+            <input 
+              type="number" 
+              id="bathrooms" 
+              name="bathrooms"
+              key={editingProperty ? editingProperty.bathrooms : "bathrooms"}
+              defaultValue={editingProperty ? editingProperty.bathrooms : ""}
+              className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none"
+            />
             <label htmlFor="bathrooms" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
               ¿Cuántos baños tiene la propiedad?
             </label>
@@ -218,10 +304,10 @@ export default function UserDashboard() {
 
           <button
             className="flex items-center justify-center bg-[#840705] w-80 border rounded-md mb-10 mt-6 py-2 text-white cursor-pointer hover:bg-[#5c0404] transition disabled:opacity-50"
-            disabled={uploading || imagesUrls.length === 0}
+            disabled={uploading || (editingProperty ? false : imagesUrls.length === 0)} // Si estamos editando, permitimos enviar sin nuevas imágenes. Si es un nuevo registro, requerimos al menos una imagen.
             type="submit"
           >
-            {uploading ? "Subiendo imagen..." : "Registrar propiedad"}
+            {uploading ? "Subiendo imagen..." : editingProperty? "Actualizar propiedad" : "Registrar propiedad"  }
           </button>
         </form>
       </div>
@@ -242,7 +328,29 @@ export default function UserDashboard() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {myProperties.map((propiedad) => (
-              <PropertyCard key={propiedad.idPropiedad} property={propiedad} />
+              //Card de las propiedades del usuario, con un botón para editar cada una. Al hacer clic en el botón de editar, se cargan los datos de la propiedad en el formulario para que el usuario pueda modificarla y actualizarla.
+
+              <div key={propiedad.idPropiedad} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                <PropertyCard key={propiedad.idPropiedad} property={propiedad} />
+
+                <button
+                  onClick={() => {
+                    setEditingProperty(propiedad);
+                    setImagesUrls(propiedad.images || []); // Cargar las imágenes existentes en el estado para mostrarlas en el formulario
+                  }}
+                  className= "flex center text-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-1.5 rounded-lg text-xs transition cursor-pointer w-full mt-4"
+                >
+                  Editar propiedad
+                </button>
+
+                <button
+                  onClick={() => handleDeleteProperty(propiedad.idPropiedad)}
+                  className="text-center bg-red-50 hover:bg-red-200 text-red-700 font-medium px-3 py-1.5 rounded-lg text-xs cursor-pointer"
+                >
+                  Eliminar propiedad
+                </button>
+              </div>
+              
             ))}
           </div>
         )}
