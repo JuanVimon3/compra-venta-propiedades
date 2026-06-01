@@ -88,6 +88,8 @@ export default function UserDashboard() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const formeElement = event.currentTarget;
+
     const formData = new FormData(event.currentTarget);
     const rawData = Object.fromEntries(formData.entries());
 
@@ -100,7 +102,7 @@ export default function UserDashboard() {
       bedrooms: Number(rawData.bedrooms),
       bathrooms: Number(rawData.bathrooms), 
       images: imagesUrls,
-      type: "Venta",
+      type: rawData.type,
       vendedor: {
         usuario: {
           idUsuario: user?.idUsuario
@@ -127,7 +129,7 @@ export default function UserDashboard() {
       if(response.ok){
         console.log(isEditing ? "--- PROPIEDAD ACTUALIZADA EXITOSAMENTE ---" : "--- PROPIEDAD REGISTRADA EXITOSAMENTE ---");
         setImagesUrls([]);
-        event.currentTarget.reset();
+        formeElement.reset();
         fetchMyProperties();
       } else{
         const rawResponse = await response.text();
@@ -259,7 +261,7 @@ export default function UserDashboard() {
           </div>
 
           <div className="relative w-80 mt-2">
-            <input 
+            <input
               type="number" 
               id="bathrooms" 
               name="bathrooms"
@@ -269,6 +271,22 @@ export default function UserDashboard() {
             />
             <label htmlFor="bathrooms" className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
               ¿Cuántos baños tiene la propiedad?
+            </label>
+          </div>
+
+          <div className="relative w-80 mt-2">
+            <select
+              id="type"
+              name="type"
+              key={editingProperty ? editingProperty.type : "type"}
+              defaultValue={editingProperty ? editingProperty.type : ""}
+              className="peer border border-gray-300 rounded-md px-3 pt-5 pb-2 w-full focus:ring-2 focus:ring-[#840705] focus:outline-none"
+            >
+              <option value="Venta">Venta</option>
+              <option value="Arriendo">Arriendo</option>
+            </select>
+            <label className="absolute left-3 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[#840705] peer-focus:text-sm">
+              Elige si vendes o arriendas tu propiedad
             </label>
           </div>
 
