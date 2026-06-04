@@ -1,7 +1,8 @@
 "use client";
 
 import { useAuthStore } from "@/store/store";
-import { LoginCredentials } from "@/types";
+import { LoginCredentials, User } from "@/types";
+
 
 export const useAuth = () => {
     const { user, token, setAuth, clearAuth, isLoggedIn } = useAuthStore();
@@ -20,14 +21,19 @@ export const useAuth = () => {
             
 
             if(!response.ok){
-                throw new Error("Credenciales incorrectas");
+                if(response.status === 401 || response.status === 403){
+                    return { success: false, msg: "Correo o contraseña incorrectos" };
+                }
+                return { success: false, msg: "Error del servidor, por favor intenta más tarde" };
             };
 
             const data = await response.json();
 
-             // Actualiza el estado de inicio de sesión
+            const tokenFromResponse = data.token || ""; // Aseguramos que token sea una cadena, incluso si no viene en la respuesta
 
-            setAuth(data, data.token || ""); // Guarda el token y la información del usuario en el store
+            const loggedInUser = data.usuario as User;
+
+            setAuth(loggedInUser, tokenFromResponse); // Guarda el token y la información del usuario en el store
 
             console.log("Datos del usuario después del login:", data);
 
