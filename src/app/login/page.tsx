@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/hooks/useAuth"
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
@@ -18,8 +18,14 @@ export default function Login() {
   // Estado local para capturar y mostrar errores al usuario
   const [error, setError] = useState<string | null>(null);
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: FormEvent) => {
+    e.preventDefault(); // Evitamos el comportamiento por defecto del formulario (no se recarga la página)
     setError(null); // Reseteamos el error antes de cada intento
+
+    if(!formData.email || !formData.password) {
+      setError("Por favor, completa todos los campos");
+      return;
+    }
 
     // Llamamos a la función asíncrona y esperamos el objeto de respuesta { success, msg }
     const result = await login(formData);
@@ -34,7 +40,7 @@ export default function Login() {
   }
 
   return (
-    <form action="" className="flex flex-col items-center">
+    <form onSubmit={handleLogin} className="flex flex-col items-center">
       <h3 className="flex flex-col items-center font-bold pt-20 pb-20 text-3xl">Ingresa a tu cuenta</h3>
       <h5 className="text-gray-500">Loguéate ingresando tu correo y contraseña</h5>
 
@@ -76,8 +82,7 @@ export default function Login() {
       </h5>
 
       <button 
-        onClick={handleLogin}
-        type="button" 
+        type="submit" 
         className="flex items-center justify-center bg-[#840705] w-80 border rounded-md mb-10 mt-6 py-2 hover:bg-red-900 transition-colors"
       >
         {/* Cambiamos el h1 por un span para cumplir con la semántica HTML profesional */}
