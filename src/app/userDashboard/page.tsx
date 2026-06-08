@@ -17,7 +17,7 @@ export default function UserDashboard() {
   const [loadingProperties, setLoadingProperties] = useState(true);
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
 
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   // const router = useRouter();
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -29,6 +29,10 @@ export default function UserDashboard() {
       const response = await fetch(`${apiUrl}/api/propiedades/usuario/${user.idUsuario}`, {
         method: 'GET',
         credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // Aseguramos que el token se envíe en la cabecera para autenticar la solicitud
+        }
       });
 
       if (response.ok) {
@@ -42,7 +46,7 @@ export default function UserDashboard() {
     } finally {
       setLoadingProperties(false);
     }
-  }, [user?.idUsuario, apiUrl]);
+  }, [user?.idUsuario, apiUrl, token]);
 
   useEffect(() => {
     if (user?.idUsuario) {
@@ -122,13 +126,15 @@ export default function UserDashboard() {
       const response = await fetch(url , {
         method: isEditing ? 'PUT' : 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(data)
       })
       if(response.ok){
         console.log(isEditing ? "--- PROPIEDAD ACTUALIZADA EXITOSAMENTE ---" : "--- PROPIEDAD REGISTRADA EXITOSAMENTE ---");
         setImagesUrls([]);
+        setEditingProperty(null);
         formeElement.reset();
         fetchMyProperties();
       } else{
@@ -148,6 +154,9 @@ export default function UserDashboard() {
     try {
       const response = await fetch(`${apiUrl}/api/propiedades/${idPropiedad}`, {
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`        }
       });
       if (response.ok) {
         console.log("Propiedad eliminada exitosamente");
@@ -348,7 +357,7 @@ export default function UserDashboard() {
             {myProperties.map((propiedad) => (
               //Card de las propiedades del usuario, con un botón para editar cada una. Al hacer clic en el botón de editar, se cargan los datos de la propiedad en el formulario para que el usuario pueda modificarla y actualizarla.
 
-              <div key={propiedad.idPropiedad} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+              <div key={propiedad.idPropiedad} className= "grid grid-cols-2 gap-2 mt-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                 <PropertyCard key={propiedad.idPropiedad} property={propiedad} />
 
                 <button
@@ -356,7 +365,7 @@ export default function UserDashboard() {
                     setEditingProperty(propiedad);
                     setImagesUrls(propiedad.images || []); // Cargar las imágenes existentes en el estado para mostrarlas en el formulario
                   }}
-                  className= "flex center text-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-1.5 rounded-lg text-xs transition cursor-pointer w-full mt-4"
+                  className= "flex items-center justify-center  text-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-1.5 rounded-lg text-xs transition cursor-pointer w-full mt-4"
                 >
                   Editar propiedad
                 </button>
